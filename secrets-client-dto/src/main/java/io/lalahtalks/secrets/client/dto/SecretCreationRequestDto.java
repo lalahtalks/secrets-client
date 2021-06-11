@@ -2,16 +2,16 @@ package io.lalahtalks.secrets.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
 public class SecretCreationRequestDto {
 
     @JsonProperty("name")
-    private String name;
+    String name;
 
     @JsonProperty("encoded")
-    private String encoded;
+    String encoded;
 
 }
