@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = TestApplication.class)
 @AutoConfigureWireMock(port = 0)
 @ActiveProfiles("test")
-public class GetSecretPageTest {
+class GetSecretPageTest {
 
     @Autowired
     private SecretsHttpClient secretsHttpClient;
