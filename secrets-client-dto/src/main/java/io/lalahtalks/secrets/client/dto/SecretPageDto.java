@@ -1,19 +1,25 @@
 package io.lalahtalks.secrets.client.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.lalahtalks.paging.dto.PageDto;
 import io.lalahtalks.paging.dto.PagingDto;
 import io.lalahtalks.paging.dto.SortDto;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Singular;
 
 import java.util.List;
 
-public class SecretPageDto extends PageDto<SecretDto> {
+public final class SecretPageDto extends PageDto<SecretDto> {
 
-    @Builder
-    public SecretPageDto(@NonNull PagingDto paging, @NonNull @Singular List<SecretDto> elements, SortDto sort) {
+    @JsonCreator
+    public SecretPageDto(
+            @JsonProperty("paging") PagingDto paging,
+            @JsonProperty("elements") List<SecretDto> elements,
+            @JsonProperty("sort") SortDto sort) {
         super(paging, elements, sort);
+    }
+
+    public SecretPageDto(PagingDto paging, List<SecretDto> elements) {
+        this(paging, elements, SortDto.EMPTY);
     }
 
 }

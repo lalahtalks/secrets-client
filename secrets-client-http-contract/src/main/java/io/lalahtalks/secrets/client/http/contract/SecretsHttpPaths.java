@@ -1,10 +1,5 @@
 package io.lalahtalks.secrets.client.http.contract;
 
-import lombok.NoArgsConstructor;
-
-import static lombok.AccessLevel.PRIVATE;
-
-@NoArgsConstructor(access = PRIVATE)
 public class SecretsHttpPaths {
 
     public static final String ACCOUNTS_PATH = "/accounts";
@@ -20,5 +15,9 @@ public class SecretsHttpPaths {
     public static final String SECRET_PATH = SECRETS_PATH + SECRET_ID_PATH;
 
     public static final String ACCOUNT_SECRETS_PATH = ACCOUNT_PATH + SECRETS_PATH;
+
+    private SecretsHttpPaths() {
+
+    }
 
 }

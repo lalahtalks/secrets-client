@@ -3,24 +3,29 @@ package io.lalahtalks.secrets.client.http;
 import io.lalahtalks.secrets.client.dto.SecretCreatedDto;
 import io.lalahtalks.secrets.client.dto.SecretCreationRequestDto;
 import io.lalahtalks.secrets.client.dto.SecretPageDto;
-import lombok.RequiredArgsConstructor;
+import io.lalahtalks.secrets.client.http.contract.problem.SecretsProblem;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import static io.lalahtalks.secrets.client.http.contract.SecretsHttpPaths.ACCOUNT_SECRETS_PATH;
 
-@RequiredArgsConstructor
 public class SecretsHttpClient {
 
-    private final SecretsHttpErrorHandler errorHandler;
     private final WebClient webClient;
+
+    public SecretsHttpClient(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     public SecretPageDto getPage(String accountId, int pageNumber, int pageSize) {
         var uri = ACCOUNT_SECRETS_PATH + "?page={page}&size={size}";
         return webClient.get()
                 .uri(uri, accountId, pageNumber, pageSize)
                 .retrieve()
-                .onStatus(errorHandler::canBeHandled, errorHandler::handleError)
+                .onStatus(HttpStatus::isError, this::handle)
                 .bodyToMono(SecretPageDto.class)
                 .block();
     }
@@ -31,9 +36,13 @@ public class SecretsHttpClient {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .retrieve()
-                .onStatus(errorHandler::canBeHandled, errorHandler::handleError)
+                .onStatus(HttpStatus::isError, this::handle)
                 .bodyToMono(SecretCreatedDto.class)
                 .block();
+    }
+
+    private Mono<? extends Throwable> handle(ClientResponse clientResponse) {
+        return clientResponse.bodyToMono(SecretsProblem.class);
     }
 
 }
