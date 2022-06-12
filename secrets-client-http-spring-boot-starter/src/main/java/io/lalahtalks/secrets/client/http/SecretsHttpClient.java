@@ -20,25 +20,23 @@ public class SecretsHttpClient {
         this.webClient = webClient;
     }
 
-    public SecretPageDto getPage(String accountId, int pageNumber, int pageSize) {
+    public Mono<SecretPageDto> getPage(String accountId, int pageNumber, int pageSize) {
         var uri = ACCOUNT_SECRETS_PATH + "?page={page}&size={size}";
         return webClient.get()
                 .uri(uri, accountId, pageNumber, pageSize)
                 .retrieve()
                 .onStatus(HttpStatus::isError, this::handle)
-                .bodyToMono(SecretPageDto.class)
-                .block();
+                .bodyToMono(SecretPageDto.class);
     }
 
-    public SecretCreatedDto create(String accountId, SecretCreationRequestDto request) {
+    public Mono<SecretCreatedDto> create(String accountId, SecretCreationRequestDto request) {
         return webClient.post()
                 .uri(ACCOUNT_SECRETS_PATH, accountId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .retrieve()
                 .onStatus(HttpStatus::isError, this::handle)
-                .bodyToMono(SecretCreatedDto.class)
-                .block();
+                .bodyToMono(SecretCreatedDto.class);
     }
 
     private Mono<? extends Throwable> handle(ClientResponse clientResponse) {
