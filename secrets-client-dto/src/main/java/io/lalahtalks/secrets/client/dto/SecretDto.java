@@ -6,8 +6,7 @@ import java.time.Instant;
 
 public record SecretDto(
         @JsonProperty("id") String id,
-        @JsonProperty("name") String name,
-        @JsonProperty("encoded") String encoded,
+        @JsonProperty("encoded") SecretEncodedDto encoded,
         @JsonProperty("createdAt") Instant createdAt) {
 
 }
